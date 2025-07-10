@@ -1,0 +1,87 @@
+body {
+  font-family: sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.input-box {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-box input {
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-group button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.btn-group button:first-child {
+  background-color: #5cb85c;
+}
+
+.btn-group button:last-child {
+  background-color: #d9534f;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+li.done span {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.add-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 24px;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
