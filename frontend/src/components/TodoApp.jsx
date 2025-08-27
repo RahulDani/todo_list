@@ -29,7 +29,7 @@ function TodoApp() {
 
   const toggleTodo = (id) => {
     axios.put(`${API_BASE}/todos/${id}`).then(() => {
-      axios.get(`${API_BASE}/todos`).then(res => setTodos(res.data));
+    axios.get(`${API_BASE}/todos`).then(res => setTodos(res.data));
     });
   };
 
@@ -40,6 +40,7 @@ function TodoApp() {
   };
 
   return (
+    <>
     <div className="container">
       <h1>📝 My To-Do Lists</h1>
       {todos.length === 0 ? (
@@ -71,6 +72,7 @@ function TodoApp() {
 
       <button className="add-btn" onClick={() => setShowInput(true)}>➕</button>
     </div>
+    </>
   );
 }
 
