@@ -17,7 +17,7 @@ def add_todo():
     todos.append({"id": len(todos) + 1, "text": data["text"], "done": False})
     return jsonify({"message": "Todo added"}), 201
 
-@app.route("/todos/<int:todo_id>", methods=["PUT"])
+@app.route("/todos/toggle/<int:todo_id>", methods=["PUT"])
 def toggle_todo(todo_id):
     for todo in todos:
         if todo["id"] == todo_id:
@@ -25,13 +25,25 @@ def toggle_todo(todo_id):
             return jsonify({"message": "Todo updated"})
     return jsonify({"error": "Not found"}), 404
 
+
+@app.route("/todos/modify/<int:todo_id>",methods=["PUT"])
+def modify_todo(todo_id):
+    for todo in todos:
+        if todo["id"] == todo_id:
+            data=request.get_json()
+            
+            todo["text"] = data["text"]
+            return jsonify({"message": "Todo updated"})
+    return jsonify({"error": "Not found"}), 404        
+
 @app.route("/todos/<int:todo_id>", methods=["DELETE"])
 def delete_todo(todo_id):
     global todos
     todos = [todo for todo in todos if todo["id"] != todo_id]
     return jsonify({"message": "Todo deleted"})
 
-# 👇 This serves the frontend (React)
+
+# This serves the frontend (React)
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve_react(path):

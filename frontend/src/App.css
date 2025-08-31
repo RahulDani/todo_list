@@ -6,7 +6,7 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  max-width: 1300px;
   margin: 50px auto;
   padding: 30px;
   background: white;
@@ -60,16 +60,71 @@ ul {
 
 li {
   display: flex;
-  justify-content: space-between;
+  align-items: flex-start;
   padding: 10px;
   border-bottom: 1px solid #ddd;
-  cursor: pointer;
+  gap: 10px;
+  width: 100%;
 }
 
-li.done span {
+li span {
+  flex: 1;
+  font-size: 16px;
+  color: #333;
+  white-space: nowrap;       /* keep on one line */
+  overflow: hidden;          /* hide overflow */
+  text-overflow: ellipsis;   /* show ... */
+}
+
+li div {
+  display: flex;
+  gap: 8px;              /* space between buttons */
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 16px;
+  color: #333;
+  white-space: nowrap;       /* default: single line */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.todo-text.expanded {
+  white-space: normal;       /* allow wrapping */
+  overflow: visible;
+  text-overflow: unset;      /* remove ellipsis */
+  word-break: break-word;    /* break long words */
+}
+
+.edit-container {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.edit-box {
+  flex: 1;      /* take full available width */
+  min-height: 120px;
+  resize: both;
+}
+
+
+
+li .actions {
+  display: flex;
+  gap: 8px;
+}
+
+li button {
+  flex-shrink: 0;       /* prevent buttons from shrinking */
+}
+
+.done {
   text-decoration: line-through;
   color: gray;
 }
+
 
 .add-btn {
   position: fixed;
@@ -84,4 +139,10 @@ li.done span {
   height: 60px;
   box-shadow: 0 5px 10px rgba(0,0,0,0.2);
   cursor: pointer;
+}
+
+.edit-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
