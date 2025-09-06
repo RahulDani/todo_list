@@ -1,0 +1,28 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+.venv/
+
+# Environment variables / secrets
+.env
+
+# Logs
+*.log
+
+# IDE files (VS Code, PyCharm, etc.)
+.vscode/
+.idea/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Build / dist (if you package your app)
+build/
+dist/
+*.egg-info/
+
