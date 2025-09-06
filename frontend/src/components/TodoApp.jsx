@@ -13,15 +13,15 @@ function TodoApp() {
 
 
   useEffect(() => {
-    axios.get(`${API_BASE}/todos`).then(res => setTodos(res.data));
+    axios.get(`${API_BASE}/todos/`).then(res => setTodos(res.data));
   }, []);
 
   const addTodo = () => {
     if (!text.trim()) return;
-    axios.post(`${API_BASE}/todos`, { text }).then(() => {
+    axios.post(`${API_BASE}/todos/`, { text }).then(() => {
       setText('');
       setShowInput(false);
-      axios.get(`${API_BASE}/todos`).then(res => setTodos(res.data));
+      axios.get(`${API_BASE}/todos/`).then(res => setTodos(res.data));
     });
   };
 
@@ -32,14 +32,14 @@ function TodoApp() {
 
   const toggleTodo = (id) => {
     axios.put(`${API_BASE}/todos/toggle/${id}`).then(() => {
-    axios.get(`${API_BASE}/todos`).then(res => setTodos(res.data));
+    axios.get(`${API_BASE}/todos/`).then(res => setTodos(res.data));
     });
   };
   
 
   const deleteTodo = (id) => {
     axios.delete(`${API_BASE}/todos/${id}`).then(() => {
-      axios.get(`${API_BASE}/todos`).then(res => setTodos(res.data));
+      axios.get(`${API_BASE}/todos/`).then(res => setTodos(res.data));
     });
   };
 
@@ -47,7 +47,7 @@ function TodoApp() {
   axios.put(`${API_BASE}/todos/modify/${id}`, { text: editText }).then(() => {
     setEditText("");
     setActiveTodoId(null);
-    axios.get(`${API_BASE}/todos`).then(res => setTodos(res.data));
+    axios.get(`${API_BASE}/todos/`).then(res => setTodos(res.data));
   });
 };
 
