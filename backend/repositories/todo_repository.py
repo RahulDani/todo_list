@@ -1,30 +1,43 @@
-from models.todo import Todo
+from bson.objectid import ObjectId
+from repositories.db import todos_collection
 
-todos = []
+def get_all(user_id):
+    todos = []
+    for todo in todos_collection.find({"user_id": ObjectId(user_id)}):
+        todos.append({
+            "id": str(todo["_id"]),
+            "text": todo["text"],
+            "done": todo["done"]
+        })
+    return todos
 
-def get_all():
-    return [todo.to_dict() for todo in todos]
+def add(text, user_id):
+    todo = {"text": text, "done": False, "user_id": ObjectId(user_id)}
+    result = todos_collection.insert_one(todo)
+    return {"id": str(result.inserted_id), "text": text, "done": False}
 
-def add(text):
-    todo = Todo(len(todos) + 1, text)
-    todos.append(todo)
-    return todo.to_dict()
+def toggle(todo_id, user_id):
+    todo = todos_collection.find_one({"_id": ObjectId(todo_id), "user_id": ObjectId(user_id)})
+    if not todo:
+        return None
+    new_done = not todo["done"]
+    todos_collection.update_one(
+        {"_id": ObjectId(todo_id), "user_id": ObjectId(user_id)},
+        {"$set": {"done": new_done}}
+    )
+    todo["done"] = new_done
+    return {"id": str(todo["_id"]), "text": todo["text"], "done": new_done}
 
-def toggle(todo_id):
-    for todo in todos:
-        if todo.id == todo_id:
-            todo.done = not todo.done
-            return todo.to_dict()
-    return None
+def modify(todo_id, text, user_id):
+    result = todos_collection.update_one(
+        {"_id": ObjectId(todo_id), "user_id": ObjectId(user_id)},
+        {"$set": {"text": text}}
+    )
+    if result.matched_count == 0:
+        return None
+    todo = todos_collection.find_one({"_id": ObjectId(todo_id), "user_id": ObjectId(user_id)})
+    return {"id": str(todo["_id"]), "text": todo["text"], "done": todo["done"]}
 
-def modify(todo_id, text):
-    for todo in todos:
-        if todo.id == todo_id:
-            todo.text = text
-            return todo.to_dict()
-    return None
-
-def delete(todo_id):
-    global todos
-    todos = [t for t in todos if t.id != todo_id]
+def delete(todo_id, user_id):
+    todos_collection.delete_one({"_id": ObjectId(todo_id), "user_id": ObjectId(user_id)})
     return True

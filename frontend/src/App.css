@@ -146,3 +146,28 @@ li button {
   flex-direction: column;
   gap: 5px;
 }
+
+.top-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.signout-btn {
+  background: linear-gradient(90deg, #6b6c6e, #030303);
+  color: white;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.signout-btn:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  opacity: 0.95;
+}

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import api from '../api';   // 🔑 use our custom axios with JWT
 import '../App.css';
-
-const API_BASE = 'http://localhost:5000';
 
 function TodoApp() {
   const [todos, setTodos] = useState([]);
@@ -10,18 +9,32 @@ function TodoApp() {
   const [showInput, setShowInput] = useState(false);
   const [activeTodoId, setActiveTodoId] = useState(null);
   const [editText, setEditText] = useState("");
+  const navigate = useNavigate();
 
-
+  // ✅ Load todos on mount
   useEffect(() => {
-    axios.get(`${API_BASE}/todos/`).then(res => setTodos(res.data));
-  }, []);
+    api.get("/todos/")
+      .then(res => setTodos(res.data))
+      .catch(err => {
+        if (err.response?.status === 401) {
+          alert("Session expired. Please login again.");
+          navigate("/login");
+        }
+      });
+  }, [navigate]);
+
+  // ✅ Logout clears JWT
+  const signOut = () => {
+    localStorage.removeItem("token");
+    navigate('/login');
+  };
 
   const addTodo = () => {
     if (!text.trim()) return;
-    axios.post(`${API_BASE}/todos/`, { text }).then(() => {
+    api.post("/todos/", { text }).then(() => {
       setText('');
       setShowInput(false);
-      axios.get(`${API_BASE}/todos/`).then(res => setTodos(res.data));
+      api.get("/todos/").then(res => setTodos(res.data));
     });
   };
 
@@ -31,30 +44,31 @@ function TodoApp() {
   };
 
   const toggleTodo = (id) => {
-    axios.put(`${API_BASE}/todos/toggle/${id}`).then(() => {
-    axios.get(`${API_BASE}/todos/`).then(res => setTodos(res.data));
+    api.put(`/todos/toggle/${id}`).then(() => {
+      api.get("/todos/").then(res => setTodos(res.data));
     });
   };
-  
 
   const deleteTodo = (id) => {
-    axios.delete(`${API_BASE}/todos/${id}`).then(() => {
-      axios.get(`${API_BASE}/todos/`).then(res => setTodos(res.data));
+    api.delete(`/todos/${id}`).then(() => {
+      api.get("/todos/").then(res => setTodos(res.data));
     });
   };
 
   const saveEdit = (id) => {
-  axios.put(`${API_BASE}/todos/modify/${id}`, { text: editText }).then(() => {
-    setEditText("");
-    setActiveTodoId(null);
-    axios.get(`${API_BASE}/todos/`).then(res => setTodos(res.data));
-  });
-};
-
+    api.put(`/todos/modify/${id}`, { text: editText }).then(() => {
+      setEditText("");
+      setActiveTodoId(null);
+      api.get("/todos/").then(res => setTodos(res.data));
+    });
+  };
 
   return (
-    <>
     <div className="container">
+      <div className="top-bar">
+        <button className="signout-btn" onClick={signOut}>Sign Out</button>
+      </div>
+
       <h1>📝 My To-Do Lists</h1>
       {todos.length === 0 ? (
         <p>No list found.</p>
@@ -62,43 +76,36 @@ function TodoApp() {
         <ul>
           {todos.map(todo => (
             <li key={todo.id}>
-    {/* If this todo is in "edit mode" */}
-    {activeTodoId === todo.id && editText !== "" ? (
-      <li>
-  <div className="edit-container">
-    <textarea
-      value={editText}
-      onChange={e => setEditText(e.target.value)}
-      className="edit-box"
-    />
-    <div className="edit-actions">
-      <button onClick={() => saveEdit(todo.id)}>Save</button>
-      <button onClick={() => setActiveTodoId(null)}>Cancel</button>
-    </div>
-  </div>
-</li>
-    ) : (
-      // Normal display mode
-    <span
-    onClick={() => setActiveTodoId(todo.id)}
-    className={`todo-text ${activeTodoId === todo.id ? "expanded" : ""} ${todo.done ? "done" : ""}`}
-    >
-    {todo.text}
-    </span>
+              {activeTodoId === todo.id && editText !== "" ? (
+                <div className="edit-container">
+                  <textarea
+                    value={editText}
+                    onChange={e => setEditText(e.target.value)}
+                    className="edit-box"
+                  />
+                  <div className="edit-actions">
+                    <button onClick={() => saveEdit(todo.id)}>Save</button>
+                    <button onClick={() => setActiveTodoId(null)}>Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <span
+                  onClick={() => setActiveTodoId(todo.id)}
+                  className={`todo-text ${activeTodoId === todo.id ? "expanded" : ""} ${todo.done ? "done" : ""}`}
+                >
+                  {todo.text}
+                </span>
+              )}
 
-    )}
-
-    {/* If menu is open for this todo */}
-    {activeTodoId === todo.id && editText === "" && (
-  <div className="actions">
-    <button onClick={() => toggleTodo(todo.id)}>Toggle</button>
-    <button onClick={() => { setEditText(todo.text); }}>Edit</button>
-    <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-    <button onClick={() => setActiveTodoId(null)}>Close</button>
-  </div>
-)}
-
-  </li>
+              {activeTodoId === todo.id && editText === "" && (
+                <div className="actions">
+                  <button onClick={() => toggleTodo(todo.id)}>Toggle</button>
+                  <button onClick={() => { setEditText(todo.text); }}>Edit</button>
+                  <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+                  <button onClick={() => setActiveTodoId(null)}>Close</button>
+                </div>
+              )}
+            </li>
           ))}
         </ul>
       )}
@@ -119,7 +126,6 @@ function TodoApp() {
 
       <button className="add-btn" onClick={() => setShowInput(true)}>➕</button>
     </div>
-    </>
   );
 }
 
