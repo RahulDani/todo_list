@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE =
+  process.env.NODE_ENV === "production"
+    ? ""  // empty → same domain as frontend
+    : "http://localhost:5000";
 
 function Signup() {
   const [username, setUsername] = useState("");

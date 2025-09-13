@@ -23,6 +23,7 @@ Thumbs.db
 
 # Build / dist (if you package your app)
 build/
+node_modules/
 dist/
 *.egg-info/
 
