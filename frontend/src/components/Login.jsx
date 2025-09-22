@@ -3,9 +3,7 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
 const API_BASE =
-  process.env.NODE_ENV === "production"
-    ? ""  // empty → same domain as frontend
-    : "http://localhost:5000";
+  process.env.NODE_ENV === "production" ? "" : "http://localhost:5000";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -13,34 +11,47 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-  e.preventDefault();  // stop page refresh
-  try {
-    const res = await axios.post(`${API_BASE}/auth/login`, { username, password });
-    localStorage.setItem("token", res.data.token);
-    navigate("/"); // go to TodoApp
-  } catch (err) {
-    alert("Invalid credentials");
-  }
-};
+    e.preventDefault();
+    try {
+      const res = await axios.post(`${API_BASE}/auth/login`, { username, password });
+      localStorage.setItem("token", res.data.token);
+      navigate("/");
+    } catch (err) {
+      alert("Invalid credentials");
+    }
+  };
 
   return (
-    <div className="container">
-      <h2>🔑 Login</h2>
-      <input
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button type="button" onClick={handleLogin}>Login</button>
-      <p>
-        Don’t have an account? <Link to="/signup">Signup</Link>
-      </p>
+    <div className="login-bg">
+      <div className="login-card">
+        <h2 className="login-title">LOGIN</h2>
+        <p className="login-subtitle">Please enter your login and password!</p>
+        <form onSubmit={handleLogin}>
+          <input
+            type="username"
+            placeholder="Username"
+            className="login-input"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="login-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <div className="forgot-row">
+            <Link to="/forgot" className="forgot-link">Forgot password?</Link>
+          </div>
+          <button type="submit" className="login-btn">LOGIN</button>
+        </form>
+        <p className="signup-row">
+          Don't have an account? <Link to="/signup" className="signup-link">Sign Up</Link>
+        </p>
+      </div>
     </div>
   );
 }
