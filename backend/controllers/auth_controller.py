@@ -1,10 +1,11 @@
 from flask import Blueprint, request, jsonify
 from repositories.user_repository import create_user, find_by_username
+from flask_cors import CORS  # add this
 import bcrypt
 from flask_jwt_extended import create_access_token
 
 auth_bp = Blueprint("auth", __name__)
-
+CORS(auth_bp) 
 @auth_bp.route("/signup", methods=["POST"])
 def signup():
     data = request.json

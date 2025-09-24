@@ -28,7 +28,7 @@ function Login() {
         <p className="login-subtitle">Please enter your login and password!</p>
         <form onSubmit={handleLogin}>
           <input
-            type="username"
+            type="text"
             placeholder="Username"
             className="login-input"
             value={username}
