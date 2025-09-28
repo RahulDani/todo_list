@@ -5,7 +5,7 @@ services:
     build: ./backend
     container_name: flask_backend
     # In production, no need to expose 5000 externally
-    env_file:
+    environment:
       - MONGO_URI=${MONGO_URI}  # Jenkins will inject
       - FLASK_ENV=${FLASK_ENV}
       #- ./backend/.env  # contains MONGO_URI and other secrets
